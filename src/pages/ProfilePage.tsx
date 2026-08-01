@@ -162,7 +162,7 @@ const ProfilePage: React.FC = () => {
                   {theme === 'dark' ? <Moon size={16} style={{ color: '#60a5fa' }} /> : <Sun size={16} style={{ color: '#fbbf24' }} />}
                   <div>
                     <label>Interface Theme</label>
-                    <p>{theme === 'dark' ? 'Dark' : theme === 'light' ? 'Light' : 'System'} Mode</p>
+                    <p>{theme === 'dark' ? 'Dark' : 'Light'} Mode</p>
                   </div>
                 </div>
                 <div className="ppp-theme-toggle-wrapper" onClick={(e) => e.stopPropagation()}>
@@ -252,23 +252,6 @@ const ProfilePage: React.FC = () => {
           .ppp-info-card { padding: 24px; border-radius: 16px; }
         }
         
-        /* App Native Dark Mode Injector Controls */
-        .dark .ppp-profile-hero { background: #1e293b; border-color: #334155; }
-        .dark .ppp-avatar-wrapper { border-color: #1e293b; background: #1e293b; }
-        .dark .ppp-avatar-big { background: #0f172a; color: #14b8a6; }
-        .dark .ppp-edit-overlay { background: #f8fafc; color: #0f172a; }
-        .dark .ppp-edit-overlay:hover { background: #e2e8f0; }
-        .dark .ppp-name-box h1 { color: #f8fafc; }
-        .dark .ppp-points-pill { background: rgba(20, 184, 166, 0.15); color: #5eead4; border-color: rgba(20, 184, 166, 0.3); }
-        .dark .ppp-bio-text { color: #94a3b8; }
-        .dark .ppp-info-card { background: #1e293b; border-color: #334155; }
-        .dark .ppp-card-header { border-bottom-color: #334155; }
-        .dark .ppp-card-header h3 { color: #f8fafc; }
-        .dark .ppp-icon-bg { background: #0f172a; color: #94a3b8; border-color: transparent; }
-        .dark .ppp-item-content p { color: #cbd5e1; }
-        .dark .ppp-setting-row:hover { background: rgba(20, 184, 166, 0.08); border-color: rgba(60, 211, 173, 0.2); }
-        .dark .ppp-row-info p { color: #cbd5e1; }
-        .dark .ppp-theme-toggle-wrapper { background: #0f172a; border-color: #334155; }
       `}</style>
     </div>
   );

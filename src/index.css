@@ -18,6 +18,28 @@ html { min-width: 320px; background: #f8fafc; }
 
 body { min-width: 320px; min-height: 100vh; margin: 0; overflow-x: hidden; }
 
+/*
+ * Most pages in this project use locally-scoped, fixed light colours. Applying
+ * the colour transform at the app root means a profile preference still covers
+ * every current page, modal, and dashboard without leaving light surfaces
+ * behind. Images are transformed a second time so photographs and illustrations
+ * retain their natural colours.
+ */
+html.dark { background: #0f172a; }
+
+html.dark body { background: #0f172a; }
+
+html.dark #root {
+  min-height: 100vh;
+  filter: invert(0.92) hue-rotate(180deg);
+}
+
+html.dark #root img,
+html.dark #root video,
+html.dark #root canvas {
+  filter: invert(0.92) hue-rotate(180deg);
+}
+
 button, input, select, textarea { font: inherit; }
 
 button, [role="button"] { -webkit-tap-highlight-color: transparent; }

@@ -9,7 +9,7 @@ export default function AppShell() {
   const hasMarketingNavigation = ['/', '/about-us', '/verify-account'].includes(pathname);
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="light" storageKey="prevpaper-theme">
       {hasMarketingNavigation && <Navbar />}
       <App />
       <Toaster richColors closeButton />
