@@ -4,6 +4,7 @@ import { Loader2, Users, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../store/authStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { API_BASE_URL } from '../config';
 
 interface Department {
   id: string;
@@ -42,13 +43,13 @@ const DeptRepsView: React.FC<{ universityId: string }> = ({ universityId }) => {
     try {
       // 1. Fetch baseline departments
       const deptRes = await axios.get(
-        `http://localhost:8080/api/v1/university-rep/${universityId}/departments`,
+        `${API_BASE_URL}/api/v1/university-rep/${universityId}/departments`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // 2. Fetch baseline active assignments details
       const repRes = await axios.get(
-        `http://localhost:8080/api/v1/university-rep/${universityId}/department-rep`,
+        `${API_BASE_URL}/api/v1/university-rep/${universityId}/department-rep`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -83,7 +84,7 @@ const DeptRepsView: React.FC<{ universityId: string }> = ({ universityId }) => {
     setLoadingStudents(true);
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/v1/get/department/${deptId}/students`,
+        `${API_BASE_URL}/api/v1/get/department/${deptId}/students`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -111,7 +112,7 @@ const DeptRepsView: React.FC<{ universityId: string }> = ({ universityId }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/v1/university-rep/${universityId}/assign-rep`,
+        `${API_BASE_URL}/api/v1/university-rep/${universityId}/assign-rep`,
         {
           userId: studentId,        
           scopeId: assigningDept.id,        

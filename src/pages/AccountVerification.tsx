@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Mail, ShieldCheck, ArrowRight } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'sonner';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { AuthBaseURL } from '../utils/URL';
+import { api } from '../store/authStore';
 
 const AccountVerification: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ const AccountVerification: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post(`${AuthBaseURL}/resend-otp`, {
+      const res = await api.post('/api/v1/auth/resend-otp', {
         recipient: email,
         type: "EMAIL_VERIFY"
       });
@@ -45,7 +44,7 @@ const AccountVerification: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/auth/verify-otp', {
+      const res = await api.post('/api/v1/auth/verify-otp', {
         recipient: email,
         otp: otp,
         type: "EMAIL_VERIFY"

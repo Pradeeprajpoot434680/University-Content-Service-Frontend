@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ChevronDown, ChevronRight, Users, BookOpen } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
+import { API_BASE_URL } from "../config";
 
 interface UniversityTeamMemberDTO {
   userId: string;
@@ -42,7 +43,7 @@ const UniversityPage: React.FC = () => {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:8080/api/v1/get/university-info/${universityId}`
+        `${API_BASE_URL}/api/v1/get/university-info/${universityId}`
       )
       .then((res) => {
         setTeam(res.data.data);

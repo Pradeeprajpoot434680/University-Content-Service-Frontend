@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { Eye, EyeOff } from 'lucide-react';
-import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { toast } from 'sonner';
 import { loginSchema } from '../utils/zodSchemas';
-import { useAuthStore } from '../store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { api, useAuthStore } from '../store/authStore';
+import { useLocation, useNavigate } from 'react-router-dom';
 const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +36,7 @@ const handleLogin = async (e: React.FormEvent) => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/auth/login', {
+      const res = await api.post('/api/v1/auth/login', {
         identifier,
         password,
       });
@@ -70,9 +70,12 @@ const handleLogin = async (e: React.FormEvent) => {
 
 
         toast.success(`Welcome back, ${fullName}!`);
-        
-        // 5. Use navigate instead of window.location for a smoother SPA experience
-        navigate('/dashboard'); 
+
+        // 5. Use navigate instead of window.location for a smoother SPA experience.
+        //    Redirect back to the page the user was trying to reach (if any).
+        const from = (location.state as { from?: { pathname?: string } } | null)
+          ?.from?.pathname;
+        navigate(from || '/dashboard');
         
       } else {
         // Handle "Please verify your account" or "Banned" messages from backend

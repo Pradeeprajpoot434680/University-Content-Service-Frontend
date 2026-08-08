@@ -208,6 +208,7 @@ import UniversityDetailView from './UniversityDetailView'; // 🟢 IMPORTED
 import Header from '../components/Header';
 import AddUniversityModal from '../components/AddUniversityModal';
 import AssignRepModal from '../components/AssignRepModal';
+import { API_BASE_URL } from '../config';
 
 const GlobalAdminDashboard: React.FC = () => {
   // Navigation state supports direct tabs or sub-routes pattern like 'university-detail:UUID:Name'
@@ -314,8 +315,8 @@ const GlobalAdminDashboard: React.FC = () => {
         <AssignRepModal
           scopeId={assigningTo.id}
           scopeName={assigningTo.name}
-          fetchUrl={`http://localhost:8080/api/v1/auth/internal/${assigningTo.id}/students`}
-          assignUrl={`http://localhost:8080/api/v1/global-admin/assign-rep`}
+          fetchUrl={`${API_BASE_URL}/api/v1/auth/internal/${assigningTo.id}/students`}
+          assignUrl={`${API_BASE_URL}/api/v1/global-admin/assign-rep`}
           userIdKey="authUserId"
           onClose={() => setAssigningTo(null)}
         />

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { 
   GraduationCap, Building2, BookOpen, Award, 
   Edit3, Loader2, Globe, Palette, ChevronRight, Sun, Moon
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { normalizeOptionalId, useAuthStore } from '../store/authStore';
+import { api, normalizeOptionalId, useAuthStore } from '../store/authStore';
 import { useTheme } from '../components/theme-provider';
 import { Switch } from '../components/ui/switch';
 
@@ -45,9 +44,7 @@ const ProfilePage: React.FC = () => {
       
       setLoading(true);
       try {
-        const userRes = await axios.get('http://localhost:8080/api/v1/users/me/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const userRes = await api.get('/api/v1/users/me/profile');
         const rawData = userRes.data?.data || userRes.data;
 
         const universityId =
@@ -57,12 +54,10 @@ const ProfilePage: React.FC = () => {
         const programId = normalizeOptionalId(rawData?.programId);
 
         if (universityId && departmentId && programId) {
-          const namesRes = await axios.post('http://localhost:8080/api/v1/get/academic-names', {
+          const namesRes = await api.post('/api/v1/get/academic-names', {
             universityId,
             departmentId,
             programId
-          }, {
-            headers: { Authorization: `Bearer ${token}` }
           });
           
           const academicData = namesRes.data?.data || {};

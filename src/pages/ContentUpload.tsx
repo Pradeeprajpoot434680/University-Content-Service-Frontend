@@ -12,7 +12,7 @@ interface ExamType { id: string; examName: string; }
 
 const ContentUpload: React.FC = () => {
   const user = useAuthStore.getState().user;
-  const universityId = normalizeOptionalId(user?.universityId) || 'e2d30929-8aa1-4600-8d82-19f239efc007';
+  const universityId = normalizeOptionalId(user?.universityId);
 
   const [departments, setDepartments] = useState<IdName[]>([]);
   const [programs, setPrograms] = useState<IdName[]>([]);
@@ -138,6 +138,7 @@ const ContentUpload: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return toast.error("Please select a file");
+    if (!universityId) return toast.error("University ID is missing. Please login again.");
 
     setIsUploading(true);
     const uploadData = new FormData();

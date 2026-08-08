@@ -82,7 +82,15 @@ const Navbar: React.FC = () => {
           
           {/* Main Desktop Navigation Links */}
           <div className="pp-desktop-links-group">
-            <Link to="/#features" className="pp-text-link">Features</Link>
+             <a
+              href="https://docs.prevpaper.fun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pp-text-link"
+            >
+              Docs
+            </a>
+            {/* <Link to="/#features" className="pp-text-link">Features</Link> */}
             <Link to="/about-us" className="pp-text-link">About</Link>
           </div>
 

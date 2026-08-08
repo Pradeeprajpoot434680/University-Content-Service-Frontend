@@ -27,7 +27,7 @@ interface SearchFilters {
 
 export default function LibraryDashboard() {
   const user = useAuthStore.getState().user;
-  const universityId = normalizeOptionalId(user?.universityId) || 'e2d30929-8aa1-4600-8d82-19f239efc007';
+  const universityId = normalizeOptionalId(user?.universityId);
 
   const [departments, setDepartments] = useState<IdName[]>([]);
   const [programs, setPrograms] = useState<IdName[]>([]);
@@ -106,6 +106,10 @@ export default function LibraryDashboard() {
   }, [filters.semesterId]);
 
   const fetchResources = useCallback(async () => {
+    if (!universityId) {
+      toast.error("University ID is missing. Please login again.");
+      return;
+    }
     setLoading(true);
     const selectedSemObj = semesters.find(s => s.id === filters.semesterId);
     

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 interface User {
   id: string;
@@ -30,7 +31,7 @@ export const normalizeOptionalId = (value?: string | null): string | undefined =
   return trimmed;
 };
 
-const GATEWAY_URL = "http://localhost:8080";
+const GATEWAY_URL = API_BASE_URL;
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -119,7 +120,16 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Auth endpoints (login/signup/OTP/reset) must surface 401s directly —
+    // e.g. a wrong password is NOT an expired session and shouldn't trigger
+    // the refresh flow (which would logout + redirect).
+    const isAuthEndpoint =
+      typeof originalRequest?.url === "string" &&
+      /\/api\/v1\/auth\/(login|signup|verify-otp|resend-otp|forgot-password|reset-password|logout)/.test(
+        originalRequest.url
+      );
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });

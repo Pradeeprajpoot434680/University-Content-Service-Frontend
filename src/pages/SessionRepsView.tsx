@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MoreVertical } from 'lucide-react';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import { API_BASE_URL } from '../config';
 
 interface SessionRep {
   assignmentId: string;
@@ -30,7 +31,7 @@ const SessionRepsView: React.FC<Props> = ({ programId }) => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:8080/api/v1/program-rep/${programId}/all-session-reps`,
+        `${API_BASE_URL}/api/v1/program-rep/${programId}/all-session-reps`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

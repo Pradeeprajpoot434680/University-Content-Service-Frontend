@@ -3,6 +3,7 @@ import axios from 'axios';
 import Button from './Button';
 import { useAuthStore } from '../store/authStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { API_BASE_URL } from '../config';
 
 interface AddProgramModalProps {
   departmentId: string;
@@ -50,7 +51,7 @@ const AddProgramModal: React.FC<AddProgramModalProps> = ({
 
     try {
       await axios.post(
-        `http://localhost:8080/api/v1/department-rep/${departmentId}/create-program`,
+        `${API_BASE_URL}/api/v1/department-rep/${departmentId}/create-program`,
         form,
         {
           headers: {

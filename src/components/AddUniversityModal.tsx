@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { API_BASE_URL } from '../config';
 
 interface AddUniversityModalProps {
   onClose: () => void;
@@ -38,7 +39,7 @@ const AddUniversityModal: React.FC<AddUniversityModalProps> = ({ onClose }) => {
 
     try {
       await axios.post(
-        'http://localhost:8080/api/v1/global-admin/create-university',
+        `${API_BASE_URL}/api/v1/global-admin/create-university`,
         form,
         {
           headers: {

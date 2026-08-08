@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Box, Hash, Plus, Loader2, Search } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { API_BASE_URL } from '../config';
 
 interface Department {
   id: string;
@@ -23,7 +24,7 @@ const DepartmentsView: React.FC<{ universityId: string }> = ({ universityId }) =
   const fetchDepartments = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8080/api/v1/university-rep/${universityId}/departments`, {
+      const res = await axios.get(`${API_BASE_URL}/api/v1/university-rep/${universityId}/departments`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -43,7 +44,7 @@ const DepartmentsView: React.FC<{ universityId: string }> = ({ universityId }) =
     e.preventDefault();
     const toastId = toast.loading("Creating department...");
     try {
-      const res = await axios.post(`http://localhost:8080/api/v1/university-rep/${universityId}/create-department`, formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/v1/university-rep/${universityId}/create-department`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

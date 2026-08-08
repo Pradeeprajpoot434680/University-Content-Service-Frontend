@@ -4,6 +4,7 @@ import { Loader2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../store/authStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { API_BASE_URL } from '../config';
 
 interface Query {
   id: string;
@@ -29,7 +30,7 @@ const GlobalAdminUserQueries: React.FC = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/v1/global-admin/queries`,
+        `${API_BASE_URL}/api/v1/global-admin/queries`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -57,7 +58,7 @@ const GlobalAdminUserQueries: React.FC = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/v1/global-admin/resolve-query`,
+        `${API_BASE_URL}/api/v1/global-admin/resolve-query`,
         { queryId: id },
         {
           headers: { Authorization: `Bearer ${token}` },

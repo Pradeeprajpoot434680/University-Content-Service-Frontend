@@ -3,6 +3,7 @@ import { Plus, Trash2, Save, GripVertical, Info, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuthStore } from '../store/authStore';
+import { API_BASE_URL } from '../config';
 
 interface ExamFormat {
   examName: string;
@@ -20,7 +21,7 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
       setIsFetching(true);
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/v1/university-rep/${universityId}/exam-formats`,
+          `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (res.data.success) setFormats(res.data.data);
@@ -73,7 +74,7 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/v1/university-rep/${universityId}/exam-formats`,
+        `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
         format,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -81,7 +82,7 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
       if (res.data.success) {
         toast.success('Exam format saved successfully', { id: toastId });
         const refreshed = await axios.get(
-          `http://localhost:8080/api/v1/university-rep/${universityId}/exam-formats`,
+          `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setFormats(refreshed.data.data);

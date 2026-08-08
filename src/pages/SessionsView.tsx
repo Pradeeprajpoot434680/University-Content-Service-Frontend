@@ -4,6 +4,7 @@ import AssignRepModal from '../components/AssignRepModal';
 import AddSessionModal from '../components/AddSessionModal';
 import { api } from '../store/authStore';
 import { toast } from 'sonner';
+import { API_BASE_URL } from '../config';
 
 interface SessionsViewProps {
   programId: string;
@@ -122,8 +123,8 @@ const SessionsView: React.FC<SessionsViewProps> = ({ programId, programName, dep
             setAssigningToSession(null);
             loadDashboard();
           }}
-          fetchUrl={`http://localhost:8080/api/v1/program-rep/${programId}/session/${assigningToSession.sessionId}/students`}
-          assignUrl={`http://localhost:8080/api/v1/program-rep/${programId}/assign-rep`}
+          fetchUrl={`${API_BASE_URL}/api/v1/program-rep/${programId}/session/${assigningToSession.sessionId}/students`}
+          assignUrl={`${API_BASE_URL}/api/v1/program-rep/${programId}/assign-rep`}
         />
       )}
 

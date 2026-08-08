@@ -3,7 +3,6 @@ import { ChevronRight, Plus, BookOpen } from 'lucide-react';
 import { api, normalizeOptionalId, useAuthStore } from '../store/authStore';
 import AddSubjectModal from '../components/AddSubjectModal';
 
-// const sessionId = "1c1e7a1c-fb0d-437c-a21f-e2bc94b93e2f";
 const SubjectsView: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   const sessionId = normalizeOptionalId(user?.scopeId);

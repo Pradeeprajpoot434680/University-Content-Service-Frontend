@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { Eye, EyeOff, Check, X } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { emailOrPhoneSchema, handleValidationErrors, resetPasswordSchema } from '../utils/zodSchemas';
-import { AuthBaseURL } from '../utils/URL';
+import { api } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 type ForgetStep = 'EMAIL_INPUT' | 'OTP_VERIFY' | 'RESET_PASSWORD';
@@ -45,7 +44,7 @@ const ForgotPasswordPage: React.FC = () => {
       
       setIsLoading(true);
       try {
-        const res = await axios.post(`${AuthBaseURL}/forgot-password`, {
+        const res = await api.post('/api/v1/auth/forgot-password', {
           recipient: formData.identifier
         });
         toast.success(res.data.message || 'OTP sent to your email/phone');
@@ -67,7 +66,7 @@ const ForgotPasswordPage: React.FC = () => {
       }
       setIsLoading(true);
       try {
-        const res = await axios.post(`${AuthBaseURL}/verify-otp`, {
+        const res = await api.post('/api/v1/auth/verify-otp', {
           recipient: formData.identifier,
           otp: formData.otp,
           type: 'PASSWORD_RESET'
@@ -99,7 +98,7 @@ const ForgotPasswordPage: React.FC = () => {
 
       setIsLoading(true);
       try {
-        const res = await axios.post(`${AuthBaseURL}/reset-password`, {
+        const res = await api.post('/api/v1/auth/reset-password', {
           recipient: formData.identifier,
           newPassword: formData.newPassword,
           confirmPassword: formData.confirmPassword

@@ -10,6 +10,7 @@ import {
 import { toast } from 'sonner';
 import { useAuthStore } from '../store/authStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { API_BASE_URL } from '../config';
 
 interface Program {
   id: string;
@@ -43,7 +44,7 @@ const ProgramsSection: React.FC<{ departmentId: string }> = ({ departmentId }) =
   const fetchPrograms = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8080/api/v1/dept-rep/${departmentId}/programs`, {
+      const res = await axios.get(`${API_BASE_URL}/api/v1/dept-rep/${departmentId}/programs`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) setPrograms(res.data.data);
@@ -61,7 +62,7 @@ const ProgramsSection: React.FC<{ departmentId: string }> = ({ departmentId }) =
     setLoadingStudents(true);
     try {
       // Fetch students belonging to this specific department
-      const res = await axios.get(`http://localhost:8080/api/v1/get/${departmentId}/students`, {
+      const res = await axios.get(`${API_BASE_URL}/api/v1/get/${departmentId}/students`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) setAvailableStudents(res.data.data);
@@ -75,7 +76,7 @@ const ProgramsSection: React.FC<{ departmentId: string }> = ({ departmentId }) =
   const handleAssignRep = async (studentId: string) => {
     if (!assigningProgram) return;
     try {
-      const res = await axios.post(`http://localhost:8080/api/v1/dept-rep/assign-program-rep`, {
+      const res = await axios.post(`${API_BASE_URL}/api/v1/dept-rep/assign-program-rep`, {
         userId: studentId,
         scopeId: assigningProgram.id // The Program ID
       }, { headers: { Authorization: `Bearer ${token}` } });

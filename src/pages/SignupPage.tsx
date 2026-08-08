@@ -106,7 +106,7 @@
 //   useEffect(() => {
 //     const fetchUniversities = async () => {
 //       try {
-//         const res = await axios.get('http://localhost:8080/api/v1/get/universities');
+//         const res = await api.get('/api/v1/get/universities');
 //         setUniversities(res.data.data);
 //       } catch (err) { console.error(err); }
 //     };
@@ -118,7 +118,7 @@
 //     if (!formData.universityId) return;
 //     const fetchDepartments = async () => {
 //       try {
-//         const res = await axios.get(`http://localhost:8080/api/v1/get/departments/${formData.universityId}`);
+//         const res = await api.get(`/api/v1/get/departments/${formData.universityId}`);
 //         setDepartments(res.data.data);
 //       } catch (err) { console.error(err); }
 //     };
@@ -131,7 +131,7 @@
 //     const fetchPrograms = async () => {
 //       try {
         
-//         const res = await axios.get(`http://localhost:8080/api/v1/get/programs/${formData.departmentId}`);
+//         const res = await api.get(`/api/v1/get/programs/${formData.departmentId}`);
 //         setPrograms(res.data.data);
 //       } catch (err) { console.error(err); }
 //     };
@@ -158,7 +158,7 @@
 //      }
 //     setIsLoading(true);
 //     try {
-//       const response = await axios.post('http://localhost:8080/api/v1/auth/signup', {
+//       const response = await axios.post(`${API_BASE_URL}/api/v1/auth/signup`, {
 //         email: formData.identifier,
 //         password: formData.password,
 //         universityId: formData.universityId,
@@ -227,7 +227,7 @@
 //     if (handleValidationErrors(result)) return;
 
 //     try {
-//       await axios.post('http://localhost:8080/api/v1/users/internal/store', {
+//       await axios.post(`${API_BASE_URL}/api/v1/users/internal/store`, {
 //         firstName: formData.firstName,
 //         lastName: formData.lastName,
 //         universityId: formData.universityId,
@@ -409,13 +409,11 @@ import React, { useState, useEffect } from 'react';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { ChevronLeft } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'sonner';
 import {  handleValidationErrors, otpSchema, signupSchema, userInfoSchema } from '../utils/zodSchemas';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from "lucide-react";
-import { AuthBaseURL } from '../utils/URL';
-import { useAuthStore } from '../store/authStore';
+import { api, useAuthStore } from '../store/authStore';
 
 type SignupStep = 'ACCOUNT_CREATE' | 'OTP_VERIFY' | 'USER_INFO';
 
@@ -460,7 +458,7 @@ const SignupPage: React.FC = () => {
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/api/v1/get/universities');
+        const res = await api.get('/api/v1/get/universities');
         setUniversities(res.data.data);
       } catch (err) { console.error(err); }
     };
@@ -471,7 +469,7 @@ const SignupPage: React.FC = () => {
     if (!formData.universityId) return;
     const fetchDepartments = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/v1/get/departments/${formData.universityId}`);
+        const res = await api.get(`/api/v1/get/departments/${formData.universityId}`);
         setDepartments(res.data.data);
       } catch (err) { console.error(err); }
     };
@@ -482,7 +480,7 @@ const SignupPage: React.FC = () => {
     if (!formData.departmentId) return;
     const fetchPrograms = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/v1/get/programs/${formData.departmentId}`);
+        const res = await api.get(`/api/v1/get/programs/${formData.departmentId}`);
         setPrograms(res.data.data);
       } catch (err) { console.error(err); }
     };
@@ -506,7 +504,7 @@ const SignupPage: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/auth/signup', {
+      const response = await api.post('/api/v1/auth/signup', {
         email: formData.identifier,
         password: formData.password,
         universityId: formData.universityId,
@@ -529,7 +527,7 @@ const SignupPage: React.FC = () => {
     if (handleValidationErrors(result)) return;
 
     try {
-      const res = await axios.post(`${AuthBaseURL}/verify-otp`, {
+      const res = await api.post('/api/v1/auth/verify-otp', {
         recipient: formData.identifier,
         otp: formData.otp,
         type: "EMAIL_VERIFY",
@@ -564,7 +562,7 @@ const SignupPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/v1/users/internal/store', {
+      await api.post('/api/v1/users/internal/store', {
         firstName: formData.firstName,
         lastName: formData.lastName,
         universityId: formData.universityId,
@@ -573,7 +571,6 @@ const SignupPage: React.FC = () => {
         batchYear: formData.batchYear,
       }, {
         headers: { Authorization: `Bearer ${tempAuthData.accessToken}` },
-        withCredentials: true,
       });
 
       toast("Signup Complete!");

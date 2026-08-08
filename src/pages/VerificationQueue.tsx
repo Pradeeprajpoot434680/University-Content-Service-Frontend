@@ -541,17 +541,29 @@ const VerificationQueue: React.FC = () => {
               </div>
 
               <div className="card-bottom">
-                {/* 🟢 BUTTON TO PREVIEW CONTENT IN MODAL / NEW TAB */}
-                {item.fileUrl ? (
-                  <button 
-                    onClick={() => setPreviewItem(item)} 
-                    className="btn-secondary"
-                  >
-                    <Eye size={14} /> Preview
-                  </button>
-                ) : (
-                  <span className="no-url-badge">Processing URL...</span>
-                )}
+                <div className="view-group">
+                  {/* 🟢 VIEW: opens the actual content URL in a new tab so the rep can inspect it */}
+                  {item.fileUrl ? (
+                    <>
+                      <button
+                        onClick={() => window.open(item.fileUrl!, '_blank', 'noopener,noreferrer')}
+                        className="btn-view"
+                        title="Open the paper in a new tab"
+                      >
+                        <Eye size={14} /> View
+                      </button>
+                      <button
+                        onClick={() => setPreviewItem(item)}
+                        className="btn-preview"
+                        title="Quick inline preview"
+                      >
+                        <FileText size={14} />
+                      </button>
+                    </>
+                  ) : (
+                    <span className="no-url-badge">Processing URL...</span>
+                  )}
+                </div>
 
                 <div className="action-group">
                   <button 
@@ -672,7 +684,12 @@ const VerificationQueue: React.FC = () => {
         .meta-pair { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--slate-400); font-weight: 500; }
         .description-text { font-size: 14px; color: var(--slate-600); line-height: 1.5; background: #f8fafc; padding: 12px; border-radius: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .card-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid #f1f5f9; }
+        .card-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid #f1f5f9; gap: 10px; flex-wrap: wrap; }
+        .view-group { display: flex; align-items: center; gap: 8px; }
+        .btn-view { background: #ecfdf5; color: #0d9488; border: 1.5px solid #10b981; padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn-view:hover { background: #10b981; color: white; box-shadow: 0 6px 14px -4px rgba(16, 185, 129, 0.4); transform: translateY(-1px); }
+        .btn-preview { color: var(--slate-400); background: none; border: none; cursor: pointer; padding: 8px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-preview:hover { color: var(--slate-900); background: #f1f5f9; }
         .btn-secondary { color: var(--slate-600); font-size: 13px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; border: none; background: #f1f5f9; cursor: pointer; transition: 0.2s; }
         .btn-secondary:hover { background: #e2e8f0; }
         .no-url-badge { font-size: 11px; font-weight: 600; color: #f59e0b; background: #fef3c7; padding: 4px 8px; border-radius: 6px; }

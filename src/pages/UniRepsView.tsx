@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../store/authStore';
+import { API_BASE_URL } from '../config';
 
 // ================= TYPES =================
 interface UniversityRep {
@@ -28,7 +29,7 @@ const UniRepsView: React.FC = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/v1/get/all-university-reps`,
+        `${API_BASE_URL}/api/v1/get/all-university-reps`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

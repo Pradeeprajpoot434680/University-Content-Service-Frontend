@@ -7,6 +7,7 @@ import AssignRepModal from '../components/AssignRepModal';
 import Button from '../components/Button';
 import { toast } from 'sonner';
 import { api } from '../store/authStore';
+import { API_BASE_URL } from '../config';
 
 type University = {
   id: string;
@@ -199,8 +200,8 @@ const Universities: React.FC<UniversitiesProps> = ({ onSelectUniversity }) => {
           scopeId={assigningTo.id}
           scopeName={assigningTo.name}
           onClose={() => { setAssigningTo(null); loadData(); }}
-          fetchUrl={`http://localhost:8080/api/v1/auth/internal/${assigningTo.id}/students`}
-          assignUrl={`http://localhost:8080/api/v1/global-admin/assign-rep`}
+          fetchUrl={`${API_BASE_URL}/api/v1/auth/internal/${assigningTo.id}/students`}
+          assignUrl={`${API_BASE_URL}/api/v1/global-admin/assign-rep`}
           userIdKey="authUserId" 
         />
       )}
