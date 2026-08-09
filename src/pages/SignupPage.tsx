@@ -413,7 +413,7 @@ import { toast } from 'sonner';
 import {  handleValidationErrors, otpSchema, signupSchema, userInfoSchema } from '../utils/zodSchemas';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from "lucide-react";
-import { api, useAuthStore } from '../store/authStore';
+import { api } from '../store/authStore';
 
 type SignupStep = 'ACCOUNT_CREATE' | 'OTP_VERIFY' | 'USER_INFO';
 
@@ -573,16 +573,10 @@ const SignupPage: React.FC = () => {
         headers: { Authorization: `Bearer ${tempAuthData.accessToken}` },
       });
 
-      toast("Signup Complete!");
+      toast("Signup Complete! Please sign in with your credentials.");
 
-      // 🔓 Now initialize global application state to log the user in
-      useAuthStore.getState().setAuth(tempAuthData.accessToken, {
-        id: tempAuthData.userId,
-        email: tempAuthData.email,
-        roles: ["STUDENT"],
-      });
-
-      navigate('/dashboard');
+      // 🔓 Do NOT auto-login — send the user to the login page instead
+      navigate('/signin');
     } catch (err: any) {
       toast(err.response?.data?.message || "Failed to save profile");
     } finally {
