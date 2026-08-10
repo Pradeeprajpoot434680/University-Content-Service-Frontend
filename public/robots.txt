@@ -1,4 +1,15 @@
+
+
 User-agent: *
 Allow: /
+Disallow: /global-admin
+Disallow: /university-admin
+Disallow: /department-admin
+Disallow: /program-admin
+Disallow: /session-admin
+Disallow: /dashboard
+Disallow: /student-dashboard
+Disallow: /profile
+Disallow: /verify-account
 
 Sitemap: https://prevpaper.fun/sitemap.xml
