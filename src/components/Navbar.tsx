@@ -143,7 +143,7 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu Drawer Modal Container */}
       {isMobileMenuOpen && (
         <div className="pp-mobile-drawer">
-          <Link to="/#features" onClick={closeMobileMenu}>Features</Link>
+          <a href="https://docs.prevpaper.fun" target="_blank" rel="noopener noreferrer">Docs</a>
           <Link to="/about-us" onClick={closeMobileMenu}>About</Link>
           
           <div className="pp-mobile-divider" />
