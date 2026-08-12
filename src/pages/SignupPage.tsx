@@ -568,7 +568,7 @@ const SignupPage: React.FC = () => {
         universityId: formData.universityId,
         departmentId: formData.departmentId,
         programId: formData.programId,
-        batchYear: formData.batchYear,
+        batchYear: Number(formData.batchYear),
       }, {
         headers: { Authorization: `Bearer ${tempAuthData.accessToken}` },
       });
