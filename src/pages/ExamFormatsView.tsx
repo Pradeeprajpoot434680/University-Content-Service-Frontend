@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/authStore';
 import { API_BASE_URL } from '../config';
 
 interface ExamFormat {
+  id?: string;
   examName: string;
   displayOrder: number;
 }
@@ -14,18 +15,23 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
   const [formats, setFormats] = useState<ExamFormat[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const token = useAuthStore.getState().accessToken;
+
+  const refreshFormats = async () => {
+    const res = await axios.get(
+      `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (res.data.success) setFormats(res.data.data);
+    else toast.error(res.data.message || 'Failed to fetch exam formats');
+  };
 
   useEffect(() => {
     const fetchFormats = async () => {
       setIsFetching(true);
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (res.data.success) setFormats(res.data.data);
-        else toast.error(res.data.message || 'Failed to fetch exam formats');
+        await refreshFormats();
       } catch (err) {
         toast.error('Server connection error');
       } finally {
@@ -33,6 +39,7 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
       }
     };
     fetchFormats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [universityId]);
 
   const addRow = () => {
@@ -48,11 +55,39 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
     setFormats([...formats, { examName: '', displayOrder: nextOrder }]);
   };
 
-  const removeRow = (index: number) => {
-    const updated = formats
-      .filter((_, i) => i !== index)
-      .map((f, i) => ({ ...f, displayOrder: i + 1 }));
-    setFormats(updated);
+  // Persisted rows are deleted from the backend; unsaved (new) rows are
+  // just dropped from local state since they were never saved to the DB.
+  const removeRow = async (index: number) => {
+    const format = formats[index];
+
+    if (!format.id) {
+      const updated = formats
+        .filter((_, i) => i !== index)
+        .map((f, i) => ({ ...f, displayOrder: i + 1 }));
+      setFormats(updated);
+      return;
+    }
+
+    setDeletingId(format.id);
+    const toastId = toast.loading('Deleting exam format...');
+
+    try {
+      const res = await axios.delete(
+        `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats/${format.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (res.data.success) {
+        toast.success(res.data.message || 'Exam format deleted', { id: toastId });
+        await refreshFormats();
+      } else {
+        toast.error(res.data.message || 'Failed to delete exam format', { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Server connection error', { id: toastId });
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -81,11 +116,7 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
 
       if (res.data.success) {
         toast.success('Exam format saved successfully', { id: toastId });
-        const refreshed = await axios.get(
-          `${API_BASE_URL}/api/v1/university-rep/${universityId}/exam-formats`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setFormats(refreshed.data.data);
+        await refreshFormats();
       } else {
         toast.error(res.data.message || 'Failed to save', { id: toastId });
       }
@@ -117,29 +148,32 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
       </div>
 
       <div className="format-list">
-        {formats.map((format, index) => (
-          <div key={index} className="format-row-wrapper">
-            <div className="format-row">
-              <div className="drag-handle"><GripVertical size={18} /></div>
-              <div className="order-number">{format.displayOrder}</div>
-              <input
-                type="text"
-                placeholder="e.g., Sessional Examination"
-                value={format.examName}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                className="format-input"
-              />
-              <div className="row-actions">
-                <button onClick={() => saveFormat(index)} disabled={isLoading} className="save-btn">
-                  {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                </button>
-                <button onClick={() => removeRow(index)} title="Remove format" className="delete-action">
-                  <Trash2 size={18} />
-                </button>
+        {formats.map((format, index) => {
+          const isDeleting = deletingId === format.id;
+          return (
+            <div key={format.id ?? `new-${index}`} className="format-row-wrapper">
+              <div className={`format-row ${isDeleting ? 'format-row-deleting' : ''}`}>
+                <div className="drag-handle"><GripVertical size={18} /></div>
+                <div className="order-number">{format.displayOrder}</div>
+                <input
+                  type="text"
+                  placeholder="e.g., Sessional Examination"
+                  value={format.examName}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  className="format-input"
+                />
+                <div className="row-actions">
+                  <button onClick={() => saveFormat(index)} disabled={isLoading} className="save-btn">
+                    {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                  </button>
+                  <button onClick={() => removeRow(index)} disabled={isDeleting} title="Remove format" className="delete-action">
+                    {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {formats.length === 0 && (
           <div className="empty-formats">
@@ -170,6 +204,8 @@ const ExamFormatsView: React.FC<{ universityId: string }> = ({ universityId }) =
         .save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .delete-action { color: #94a3b8; background: none; border: none; cursor: pointer; padding: 8px; border-radius: 8px; transition: 0.2s; }
         .delete-action:hover { color: #ef4444; background: #fee2e2; }
+        .delete-action:disabled { opacity: 0.6; cursor: not-allowed; }
+        .format-row-deleting { opacity: 0.5; pointer-events: none; }
         .add-btn { display: flex; align-items: center; gap: 8px; color: #3cd3ad; background: #3cd3ad10; border: 1.5px dashed #3cd3ad; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .add-btn:hover { background: #3cd3ad20; }
         .empty-formats { text-align: center; padding: 40px; border: 2px dashed #e2e8f0; border-radius: 16px; color: #94a3b8; }

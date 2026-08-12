@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronRight, Plus, BookOpen } from 'lucide-react';
+import { ChevronRight, Plus, BookOpen, Trash2, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { api, normalizeOptionalId, useAuthStore } from '../store/authStore';
 import AddSubjectModal from '../components/AddSubjectModal';
 
@@ -11,6 +12,7 @@ const SubjectsView: React.FC = () => {
   const [subjects, setSubjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // ✅ FETCH DASHBOARD
   useEffect(() => {
@@ -49,6 +51,32 @@ const SubjectsView: React.FC = () => {
   useEffect(() => {
     fetchSubjects();
   }, [activeSemester]);
+
+  // ✅ DELETE SUBJECT
+  const handleDelete = async (subjectId: string) => {
+    if (!window.confirm('Are you sure you want to delete this subject?')) return;
+
+    setDeletingId(subjectId);
+    try {
+      const res = await api.delete(
+        `/api/v1/session-rep/${sessionId}/semesters/${activeSemester.semesterId}/subjects/${subjectId}`
+      );
+      if (res.data.success) {
+        toast.success(res.data.message || 'Subject deleted');
+        // Keep the header stat count in sync without waiting for a dashboard refetch
+        setActiveSemester((prev: any) =>
+          prev ? { ...prev, subjectCount: Math.max(0, (prev.subjectCount || 1) - 1) } : prev
+        );
+        await fetchSubjects();
+      } else {
+        toast.error(res.data.message || 'Failed to delete subject');
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Server connection error');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="subjects-view">
@@ -103,6 +131,8 @@ const SubjectsView: React.FC = () => {
                 key={s.subjectId}
                 name={s.subjectName}
                 code={s.subjectCode}
+                deleting={deletingId === s.subjectId}
+                onDelete={() => handleDelete(s.subjectId)}
               />
             ))}
           </div>
@@ -250,6 +280,43 @@ const SubjectsView: React.FC = () => {
           color: #94a3b8;
         }
 
+        .row-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .delete-btn {
+          background: none;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 8px;
+          transition: 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .delete-btn:hover:not(:disabled) {
+          color: #ef4444;
+          background: #fee2e2;
+        }
+
+        .delete-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .sv-spin {
+          animation: sv-spin 1s linear infinite;
+        }
+
+        @keyframes sv-spin {
+          to { transform: rotate(360deg); }
+        }
+
         .empty {
           text-align: center;
           color: #94a3b8;
@@ -268,7 +335,7 @@ const StatCard = ({ title, value }: any) => (
   </div>
 );
 
-const SubjectRow = ({ name, code }: any) => (
+const SubjectRow = ({ name, code, deleting, onDelete }: any) => (
   <div className="subject-row">
     <div className="left">
       <div className="icon">
@@ -280,7 +347,20 @@ const SubjectRow = ({ name, code }: any) => (
       </div>
     </div>
 
-    <ChevronRight size={18} />
+    <div className="row-actions">
+      <button
+        className="delete-btn"
+        title="Delete subject"
+        disabled={deleting}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete?.();
+        }}
+      >
+        {deleting ? <Loader2 size={18} className="sv-spin" /> : <Trash2 size={18} />}
+      </button>
+      <ChevronRight size={18} />
+    </div>
   </div>
 );
 

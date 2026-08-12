@@ -25,9 +25,9 @@ body { min-width: 320px; min-height: 100vh; margin: 0; overflow-x: hidden; }
  * behind. Images are transformed a second time so photographs and illustrations
  * retain their natural colours.
  */
-html.dark { background: #0f172a; }
+html.dark { background: #132440; }
 
-html.dark body { background: #0f172a; }
+html.dark body { background: #132440; }
 
 html.dark #root {
   min-height: 100vh;
