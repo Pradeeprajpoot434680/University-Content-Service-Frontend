@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
+import ServerStatusBanner from '../components/ServerStatusBanner';
 import { BookOpen, ShieldCheck, Zap, Users, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,6 +27,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="lp-wrapper">
+      <ServerStatusBanner />
       {/* HERO SECTION */}
       <header className="lp-hero">
         <div className="lp-container lp-hero-inner">
