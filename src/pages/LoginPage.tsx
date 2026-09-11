@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import ServerStatusBanner from '../components/ServerStatusBanner';
 import { Eye, EyeOff } from 'lucide-react';
 import { jwtDecode } from "jwt-decode";
 import { toast } from 'sonner';
@@ -91,7 +90,7 @@ const handleLogin = async (e: React.FormEvent) => {
 
   return (
     <div className="login-container">
-      <ServerStatusBanner />
+
       <div className="login-card">
         <div className="form-section">
           <h2>Sign In</h2>

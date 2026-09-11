@@ -3,8 +3,8 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import './App.css'
 import { normalizeOptionalId, useAuthStore } from './store/authStore'
+import ServerStatusBanner from './components/ServerStatusBanner'
 
-// 🔌 Code-split each route page so only the currently-viewed page is downloaded.
 const SignupPage = lazy(() => import('./pages/SignupPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
@@ -96,6 +96,7 @@ const UniversityScopedRoute = ({
 function App() {
   return (
     <Suspense fallback={<PageFallback />}>
+      <ServerStatusBanner/>
       <Routes>
           {/* Auth / Public Only Routes */}
           <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />

@@ -9,10 +9,10 @@ const ServerStatusBanner: React.FC = () => {
   return (
     <div className="server-status-banner">
       <div className="server-status-banner__content">
-        <AlertTriangle size={18} className="server-status-banner__icon" />
+        <AlertTriangle size={30} className="server-status-banner__icon" />
         <div className="server-status-banner__text">
           <strong>Server is currently stopped</strong>
-          <span>due to unpaid charges. Some features may be unavailable.</span>
+          <span>due to unpaid charges. When Servers Will Up then All Features will Available</span>
         </div>
       </div>
       <button

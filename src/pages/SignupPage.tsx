@@ -408,7 +408,6 @@
 import React, { useState, useEffect } from 'react';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import ServerStatusBanner from '../components/ServerStatusBanner';
 import { ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import {  handleValidationErrors, otpSchema, signupSchema, userInfoSchema } from '../utils/zodSchemas';
@@ -592,7 +591,6 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="signup-container">
-      <ServerStatusBanner />
       <div className="signup-card">
         <div className="form-section">
           <div className="form-header-nav">
