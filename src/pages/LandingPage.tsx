@@ -13,12 +13,12 @@ const LandingPage: React.FC = () => {
   useEffect(() => {
     let s = 0, u = 0, p = 0;
     const interval = setInterval(() => {
-      if (s < 10000) s += 250;
-      if (u < 50) u += 1;
-      if (p < 500) p += 10;
-      setStudentsCount(Math.min(s, 10000));
-      setUniversitiesCount(Math.min(u, 50));
-      setPapersCount(Math.min(p, 500));
+      if (s < 100) s += 250;
+      if (u < 3) u += 1;
+      if (p < 100) p += 10;
+      setStudentsCount(Math.min(s, 100));
+      setUniversitiesCount(Math.min(u, 3));
+      setPapersCount(Math.min(p, 100));
     }, 50);
 
     return () => clearInterval(interval);
